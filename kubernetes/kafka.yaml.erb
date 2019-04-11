@@ -73,7 +73,7 @@ spec:
         - -c
         - "exec kafka-server-start.sh /opt/kafka/config/server.properties --override broker.id=${HOSTNAME##*-} \
           --override listeners=PLAINTEXT://:9092 \
-          --override zookeeper.connect=zk-0.zk-hs.app-zk.svc.cluster.local:2888,zk-1.zk-hs.app-zk.svc.cluster.local:2888,zk-2.zk-hs.app-zk.svc.cluster.local:2888\
+          --override zookeeper.connect=zk-0.zk-hs.app-zk.svc.cluster.local:2888,zk-1.zk-hs.app-zk.svc.cluster.local:2888,zk-2.zk-hs.app-zk.svc.cluster.local:2888 \
           --override log.dir=/var/lib/kafka \
           --override auto.create.topics.enable=true \
           --override auto.leader.rebalance.enable=true \
