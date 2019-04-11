@@ -30,6 +30,9 @@ metadata:
 spec:
   serviceName: kafka-svc
   replicas: 3
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
   template:
     metadata:
       labels:
@@ -159,18 +162,16 @@ spec:
           --override reserved.broker.max.id=1000 "
         env:
         - name: KAFKA_HEAP_OPTS
-          value : "-Xmx512M -Xms512M"
+          value : "-Xmx1024M -Xms1024M"
         - name: KAFKA_OPTS
           value: "-Dlogging.level=INFO"
         volumeMounts:
         - name: datadir
           mountPath: /var/lib/kafka
         readinessProbe:
-          exec:
-           command: 
-            - sh 
-            - -c 
-            - "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server=localhost:9092"
+          tcpSocket:
+            port: 9092
+          timeoutSeconds: 5
       securityContext:
         runAsUser: 503 # ocfkafka user
         fsGroup: 3 # sys group
