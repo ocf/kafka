@@ -63,8 +63,8 @@ spec:
         image: "docker.ocf.berkeley.edu/kafka-k8s:<%= version %>"
         resources:
           requests:
-            memory: "1Gi"
-            cpu: 500m
+            memory: "2Gi"
+            cpu: 1000m
         ports:
         - containerPort: 9092
           name: server
