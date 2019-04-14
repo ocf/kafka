@@ -1,6 +1,6 @@
 FROM ubuntu:18.04 
 ENV KAFKA_USER=ocfkafka \
-KAFKA_DATA_DIR=/var/lib/kafka/data \
+KAFKA_DATA_DIR=/var/lib/kafka \
 JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
 KAFKA_HOME=/opt/kafka \
 PATH=$PATH:/opt/kafka/bin
