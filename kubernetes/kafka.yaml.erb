@@ -67,7 +67,7 @@ spec:
         resources:
           requests:
             memory: "2Gi"
-            cpu: 1000m
+            cpu: 500m
         ports:
         - containerPort: 9092
           name: server
@@ -172,6 +172,8 @@ spec:
           tcpSocket:
             port: 9092
           timeoutSeconds: 5
+          # This value will likely need to be increased as the cluster grows
+          initialDelaySeconds: 30
       securityContext:
         runAsUser: 503 # ocfkafka user
         fsGroup: 3 # sys group
