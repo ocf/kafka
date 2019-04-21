@@ -63,7 +63,7 @@ spec:
       containers:
       - name: k8skafka
         imagePullPolicy: Always
-        image: "docker.ocf.berkeley.edu/kafka-k8s:<%= version %>"
+        image: "docker.ocf.berkeley.edu/kafka:<%= version %>"
         resources:
           requests:
             memory: "2Gi"

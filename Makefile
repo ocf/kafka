@@ -1,8 +1,5 @@
-DOCKER_REVISION ?= kafka-k8s-testing-$(USER)
-DOCKER_TAG = docker-push.ocf.berkeley.edu/kafka-k8s:$(DOCKER_REVISION)
-RANDOM_PORT := $(shell expr $$(( 8000 + (`id -u` % 1000) + 2 )))
-
-GF_VERSION := 6.0.0
+DOCKER_REVISION ?= kafka-$(USER)
+DOCKER_TAG = docker-push.ocf.berkeley.edu/kafka:$(DOCKER_REVISION)
 
 dev: cook-image
 	docker run --rm "$(DOCKER_TAG)" /bin/sh
