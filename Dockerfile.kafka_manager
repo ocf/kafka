@@ -1,0 +1,35 @@
+FROM ubuntu:18.04
+
+ENV KAFKA_USER=ocfkafka \
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
+KAFKA_MANAGER_DIST=2.0.0.2
+
+RUN set -x \
+    && sed -i 's/archive.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.list \
+    && sed -i 's/security.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y openjdk-8-jdk wget unzip --no-install-recommends \
+    && wget -q "https://github.com/yahoo/kafka-manager/archive/$KAFKA_MANAGER_DIST.tar.gz" \
+    && tar -xvf "$KAFKA_MANAGER_DIST.tar.gz" -C /opt \
+    && cd /opt/kafka-manager-$KAFKA_MANAGER_DIST \
+    && ./sbt clean dist \
+    && unzip ./target/universal/kafka-manager-${KAFKA_MANAGER_DIST}.zip -d /opt/kafka-manager \
+    && apt-get purge -y openjdk-8-jdk wget unzip --auto-remove \
+    && apt-get install -y openjdk-8-jre-headless --no-install-recommends \
+    && cd / \
+    && rm -rf /opt/kafka-manager-$KAFKA_MANAGER_DIST
+
+WORKDIR /opt/kafka-manager
+
+COPY kafka-manager/application.conf /opt/kafka-manager
+COPY kafka-manager/consumer.properties /opt/kafka-manager
+
+RUN set -x \
+    && useradd $KAFKA_USER \
+    && usermod -u 503 $KAFKA_USER \
+    && usermod -g 3 $KAFKA_USER \
+    && [ `id -u $KAFKA_USER` -eq 503 ] \
+    && [ `id -g $KAFKA_USER` -eq 3 ] \
+    && chown -R "$KAFKA_USER:$KAFKA_USER" /opt/kafka-manager
+
+USER $KAFKA_USER
