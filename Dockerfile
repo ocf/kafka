@@ -13,7 +13,7 @@ RUN sed -i 's/security.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.l
 
 RUN set -x \
     && apt-get update \
-    && apt-get install -y openjdk-8-jre-headless wget gpg
+    && apt-get install -y openjdk-8-jre-headless wget gpg net-tools iputils-ping netcat-openbsd
 
 RUN wget -q "https://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz" \
     && wget -q "https://www.apache.org/dist/kafka/$KAFKA_VERSION/$KAFKA_DIST.tgz.asc" \
