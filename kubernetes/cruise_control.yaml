@@ -300,7 +300,7 @@ spec:
     app: cruise-control
   ports:
   - port: 80
-    targetPort: 8090
+    targetPort: 8080
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -346,6 +346,31 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /opt/cruise-control/config
+      - name: auth
+        image: "keycloak/keycloak-gatekeeper:6.0.1"
+        args:
+          - --client-id=cruisecontrol
+          - --client-secret=$(KEYCLOAK_SECRET)
+          - --encryption-key=$(ENCRYPTION_KEY)
+          - --redirection-url=https://cruisecontrol.ocf.berkeley.edu/
+          - --discovery-url=https://auth.ocf.berkeley.edu/auth/realms/ocf
+          - --enable-default-deny=true
+          - --enable-session-cookies
+          - --listen=:8080
+          - --upstream-url=http://localhost:8090
+          - --resources=uri=/*|roles=ocfstaff
+          - --headers=Host=cruisecontrol.ocf.berkeley.edu
+        env:
+          - name: KEYCLOAK_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-client
+                key: secret
+          - name: ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                name: keycloak-client
+                key: encryption_key
       volumes:
       - name: configmap
         configMap:
@@ -367,3 +392,12 @@ spec:
           - backend:
               serviceName: cruise-control
               servicePort: 80
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-client
+type: Opaque
+stringData:
+  secret: <%= keycloak_secret %>
+  encryption_key: <%= keycloak_encryption_key %>
