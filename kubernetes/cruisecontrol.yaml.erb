@@ -294,10 +294,10 @@ data:
 kind: Service
 apiVersion: v1
 metadata:
-  name: cruise-control
+  name: cruisecontrol
 spec:
   selector:
-    app: cruise-control
+    app: cruisecontrol
   ports:
   - port: 80
     targetPort: 8080
@@ -305,16 +305,16 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cruise-control
+  name: cruisecontrol
 spec:
   selector:
     matchLabels:
-      app: cruise-control
+      app: cruisecontrol
   replicas: 1
   template:
     metadata:
       labels:
-        app: cruise-control
+        app: cruisecontrol
       annotations:
     spec:
       terminationGracePeriodSeconds: 30
@@ -329,7 +329,7 @@ spec:
         - name: config
           mountPath: /opt/cruise-control/config
       containers:
-      - name: cruise-control
+      - name: cruisecontrol
         image: solsson/kafka-cruise-control@sha256:f3f3775f3b5e2a5ae2da6fdae60ed118793ac32c80f13fba31be8f025a57f6ac
         imagePullPolicy: IfNotPresent
         ports:
@@ -390,7 +390,7 @@ spec:
       http:
         paths:
           - backend:
-              serviceName: cruise-control
+              serviceName: cruisecontrol
               servicePort: 80
 ---
 apiVersion: v1
