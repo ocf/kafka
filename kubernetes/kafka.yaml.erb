@@ -60,6 +60,17 @@ spec:
                         - zk
                  topologyKey: "kubernetes.io/hostname"
       terminationGracePeriodSeconds: 300
+      initContainers:
+      - name: cruise-control-reporter
+        image: solsson/kafka-cruise-control@sha256:c70eae329b4ececba58e8cf4fa6e774dd2e0205988d8e5be1a70e622fcc46716
+        command:
+        - sh
+        - -c
+        - |
+          cp -v /opt/cruise-control/cruise-control/build/dependant-libs/cruise-control-metrics-reporter.jar /opt/kafka/libs/extensions/cruise-control-metrics-reporter.jar
+        volumeMounts:
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
       containers:
       - name: k8skafka
         imagePullPolicy: Always
@@ -75,6 +86,7 @@ spec:
         - sh
         - -c
         - "exec kafka-server-start.sh /opt/kafka/config/server.properties --override broker.id=${HOSTNAME##*-} \
+          --override metric.reporters=com.linkedin.kafka.cruisecontrol.metricsreporter.CruiseControlMetricsReporter \
           --override listeners=PLAINTEXT://:9092 \
           --override zookeeper.connect=zk-kafka-zookeepercluster-client.app-zk.svc.cluster.local:2181/kafka \
           --override log.dirs=/var/lib/kafka \
@@ -159,15 +171,19 @@ spec:
           --override replica.fetch.backoff.ms=1000 \
           --override replica.fetch.max.bytes=1048576 \
           --override replica.fetch.response.max.bytes=10485760 \
-          --override reserved.broker.max.id=1000 "
+          --override reserved.broker.max.id=1000"
         env:
         - name: KAFKA_HEAP_OPTS
-          value : "-Xmx1024M -Xms1024M"
+          value: "-Xmx1024M -Xms1024M"
         - name: KAFKA_OPTS
           value: "-Dlogging.level=INFO"
+        - name: CLASSPATH
+          value: "/opt/kafka/libs/extensions/*"
         volumeMounts:
         - name: datadir
           mountPath: /var/lib/kafka
+        - name: extensions
+          mountPath: /opt/kafka/libs/extensions
         readinessProbe:
           tcpSocket:
             port: 9092
@@ -177,6 +193,9 @@ spec:
       securityContext:
         runAsUser: 503 # ocfkafka user
         fsGroup: 3 # sys group
+      volumes:
+      - name: extensions
+        emptyDir: {}
   volumeClaimTemplates:
   - metadata:
       name: datadir
