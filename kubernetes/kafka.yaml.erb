@@ -82,6 +82,8 @@ spec:
         ports:
         - containerPort: 9092
           name: server
+        - containerPort: 9099
+          name: jmx
         command:
         - sh
         - -c
@@ -179,6 +181,8 @@ spec:
           value: "-Dlogging.level=INFO"
         - name: CLASSPATH
           value: "/opt/kafka/libs/extensions/*"
+        - name: JMX_PORT
+          value: "9099"
         volumeMounts:
         - name: datadir
           mountPath: /var/lib/kafka
