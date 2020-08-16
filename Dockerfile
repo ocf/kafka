@@ -6,7 +6,7 @@ KAFKA_HOME=/opt/kafka \
 PATH=$PATH:/opt/kafka/bin
 
 ARG KAFKA_VERSION=2.6.0
-ARG KAFKA_DIST=kafka_2.12-${RELEASE}
+ARG KAFKA_DIST=kafka_2.12-${KAFKA_VERSION}
 
 RUN sed -i 's/archive.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.list
 RUN sed -i 's/security.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.list
