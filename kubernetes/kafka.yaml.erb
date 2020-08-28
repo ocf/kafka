@@ -28,6 +28,9 @@ kind: StatefulSet
 metadata:
   name: kafka
 spec:
+  selector:
+    matchLabels:
+      app: kafka
   serviceName: kafka-svc
   replicas: 3
   updateStrategy:
@@ -36,7 +39,7 @@ spec:
   template:
     metadata:
       labels:
-        app: kafka
+        app: kafka  
     spec:
       affinity:
         podAntiAffinity:
