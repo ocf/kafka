@@ -44,13 +44,15 @@ spec:
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: "app"
-                    operator: In
-                    values: 
-                    - kafka
-              topologyKey: "kubernetes.io/hostname"
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app"
+                      operator: In
+                      values: 
+                      - kafka
+                topologyKey: "kubernetes.io/hostname"
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
              - weight: 1
