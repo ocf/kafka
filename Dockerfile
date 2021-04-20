@@ -5,7 +5,7 @@ JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64 \
 KAFKA_HOME=/opt/kafka \
 PATH=$PATH:/opt/kafka/bin
 
-ARG KAFKA_VERSION=2.6.0
+ARG KAFKA_VERSION=2.8.0
 ARG KAFKA_DIST=kafka_2.12-${KAFKA_VERSION}
 
 RUN sed -i 's/archive.ubuntu.com/mirrors.ocf.berkeley.edu/g' /etc/apt/sources.list
